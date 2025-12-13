@@ -33,5 +33,18 @@
     "JSONC": { "formatter": { "language_server": { "name": "biome" } } },
     "CSS": { "formatter": { "language_server": { "name": "biome" } } },
     "GraphQL": { "formatter": { "language_server": { "name": "biome" } } }
+  },
+  "auto_install_extensions": {
+    "biome": true,
+    "comment": true,
+    "docker-compose": true,
+    "dockerfile": true,
+    "env": true,
+    "git-firefly": true,
+    "github-actions": true,
+    "html": true,
+    "nginx": true,
+    "sql": true,
+    "toml": true
   }
 }
