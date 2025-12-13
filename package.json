@@ -1,0 +1,36 @@
+{
+  "name": "chattr",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --watch src/index.ts",
+    "check": "biome check .",
+    "check:unsafe": "biome check --write --unsafe .",
+    "check:write": "biome check --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@biomejs/biome": "^2.3.8",
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "lint-staged": "^16.2.7",
+    "simple-git-hooks": "^2.13.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "simple-git-hooks": {
+    "commit-msg": "bun commitlint --edit $1",
+    "pre-commit": "bun lint-staged"
+  },
+  "lint-staged": {
+    "*": [
+      "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
+    ]
+  }
+}
