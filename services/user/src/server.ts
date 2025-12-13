@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 
 export const app = new Elysia()
   .get("/ping", {
-    message: "Welcome to gatewar service!",
+    message: "Welcome to User service!",
   })
   .listen(3000);
 

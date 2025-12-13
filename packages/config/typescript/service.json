@@ -1,19 +1,20 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    /* Language and Environment */
-    "target": "ES2021",
-    "moduleDetection": "auto",
+    "target": "ESNext",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "allowJs": true,
 
-    /* Modules */
-    "module": "ES2022",
-    "moduleResolution": "node",
-    "types": ["bun-types"],
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
 
-    /* Interop Constraints */
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* Type Checking */
     "strict": true,
     "skipLibCheck": true,
     "noImplicitAny": true,

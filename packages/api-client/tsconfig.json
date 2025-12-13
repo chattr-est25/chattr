@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": ["config/typescript/service.json"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@service/chat/*": ["../../services/chat/src/*"],
+      "@service/gateway/*": ["../../services/gateway/src/*"],
+      "@service/user/*": ["../../services/user/src/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
+}

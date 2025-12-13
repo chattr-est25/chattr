@@ -1,5 +1,5 @@
 {
-  "name": "gateway",
+  "name": "user",
   "module": "src/index.ts",
   "type": "module",
   "private": true,
@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "elysia": "catalog:service"
+    "elysia": "catalog",
+    "api-client": "workspace:*"
   },
   "devDependencies": {
     "config": "workspace:*"
