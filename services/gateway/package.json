@@ -6,6 +6,7 @@
     "@t3-oss/env-core": "catalog:",
     "api-client": "workspace:*",
     "elysia": "catalog:",
+    "elysia-compress": "^1.2.1",
     "elysia-helmet": "^3.0.0",
     "lib": "workspace:*",
     "openapi-merge": "^1.3.3",
