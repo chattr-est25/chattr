@@ -18,6 +18,8 @@ export const openApiMergeHandler = async () => {
 
   const results = await Promise.allSettled([
     // @ts-expect-error not typed
+    api.gateway.openapi.json.get(),
+    // @ts-expect-error not typed
     api.user.openapi.json.get(),
     // @ts-expect-error not typed
     api.chat.openapi.json.get(),
@@ -25,9 +27,24 @@ export const openApiMergeHandler = async () => {
 
   const mergeInputs: Parameters<typeof merge>[0] = [baseSpec];
 
-  // USER SERVICE
+  // GATEWAY SERVICE
   if (results[0].status === "fulfilled") {
-    const userOpenApi = results[0].value?.data;
+    const gatewayOpenApi = results[0].value?.data;
+    if (gatewayOpenApi) {
+      mergeInputs.push({
+        oas: gatewayOpenApi,
+      });
+    }
+  } else {
+    log.warn(
+      { error: results[0].reason },
+      "Gateway service OpenAPI not available",
+    );
+  }
+
+  // USER SERVICE
+  if (results[1].status === "fulfilled") {
+    const userOpenApi = results[1].value?.data;
     if (userOpenApi) {
       mergeInputs.push({
         oas: userOpenApi,
@@ -39,14 +56,14 @@ export const openApiMergeHandler = async () => {
     }
   } else {
     log.warn(
-      { error: results[0].reason },
+      { error: results[1].reason },
       "User service OpenAPI not available",
     );
   }
 
   // CHAT SERVICE
-  if (results[1].status === "fulfilled") {
-    const chatOpenApi = results[1].value?.data;
+  if (results[2].status === "fulfilled") {
+    const chatOpenApi = results[2].value?.data;
     if (chatOpenApi) {
       mergeInputs.push({
         oas: chatOpenApi,
@@ -58,7 +75,7 @@ export const openApiMergeHandler = async () => {
     }
   } else {
     log.warn(
-      { error: results[1].reason },
+      { error: results[2].reason },
       "Chat service OpenAPI not available",
     );
   }

@@ -1,5 +1,6 @@
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
+
 import { loggerPlugin } from "lib/plugins/logger";
 import { env } from "@/lib/env";
 

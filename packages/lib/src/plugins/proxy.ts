@@ -78,4 +78,9 @@ export const serviceProxy = (options: ServiceProxyOptions) =>
 
       return fetch(proxyRequest);
     },
+    {
+      detail: {
+        hide: true,
+      },
+    },
   );

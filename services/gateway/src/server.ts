@@ -32,10 +32,16 @@ export const app = new Elysia()
   )
   .use(cors())
   .use(serverTiming())
-  .use(openapi())
+  .use(
+    openapi({
+      scalar: {
+        url: "/openapi/json/all",
+      },
+    }),
+  )
   .use(serviceProxy(serviceProxyConfig.user))
   .use(serviceProxy(serviceProxyConfig.chat))
-  .get("/openapi/json", openApiMergeHandler)
+  .get("/openapi/json/all", openApiMergeHandler, { detail: { hide: true } })
   .listen(3000);
 
 export type App = typeof app;

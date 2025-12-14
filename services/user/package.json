@@ -4,6 +4,7 @@
     "@t3-oss/env-core": "catalog:",
     "api-client": "workspace:*",
     "elysia": "catalog:",
+    "elysia-http-exception": "catalog:",
     "lib": "workspace:*",
     "zod": "catalog:"
   },

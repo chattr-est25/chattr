@@ -41,6 +41,9 @@
       "@elysiajs/openapi": "^1.4.11",
       "@t3-oss/env-core": "^0.13.8",
       "elysia": "latest",
+      "elysia-healthcheck": "^1.0.0",
+      "elysia-http-exception": "^0.1.5",
+      "elysiajs-cdn-cache": "^0.0.13",
       "zod": "^4.1.13"
     },
     "packages": [
