@@ -1,11 +1,11 @@
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
-import { logger } from "lib/plugins/logger";
+import { loggerPlugin } from "lib/plugins/logger";
 import { env } from "@/lib/env";
 
 export const app = new Elysia({ prefix: "/api" })
   .use(
-    logger({
+    loggerPlugin({
       level: env.LOGGER_LEVEL,
       target: env.LOGGER_TARGET,
     }),
@@ -19,5 +19,5 @@ export const app = new Elysia({ prefix: "/api" })
 export type App = typeof app;
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
+  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
 );

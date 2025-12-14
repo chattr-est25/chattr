@@ -30,8 +30,14 @@ const createLoggerOptions = (options: CreateLoggerOptions) => ({
   },
 });
 
-export const log = (options: CreateLoggerOptions) =>
-  createPinoLogger(createLoggerOptions(options));
+export const logger = (
+  options: CreateLoggerOptions = {
+    level: "info",
+    target: Bun.env.APP_ENV === "local" ? "pino-pretty" : "pino/file",
+  },
+) => createPinoLogger(createLoggerOptions(options));
 
-export const logger = (options: CreateLoggerOptions) =>
+export const log = logger();
+
+export const loggerPlugin = (options: CreateLoggerOptions) =>
   new Elysia().use(elysiaLogger(createLoggerOptions(options)));
