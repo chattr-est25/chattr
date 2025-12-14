@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { health } from "@/modules/health";
+import { env } from "./lib/env";
 import { openapiSpec } from "./modules/openapi";
 import { plugins } from "./modules/plugins";
 import { proxy } from "./modules/proxy";
@@ -9,7 +10,7 @@ export const app = new Elysia()
   .use(openapiSpec)
   .use(health)
   .use(proxy)
-  .listen(3000);
+  .listen(env.PORT);
 
 export type App = typeof app;
 
