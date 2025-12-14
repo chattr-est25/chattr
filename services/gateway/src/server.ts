@@ -2,7 +2,6 @@ import cors from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
 import serverTiming from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
-import compression from "elysia-compress";
 import { helmet } from "elysia-helmet";
 import { loggerPlugin } from "lib/plugins/logger";
 import { serviceProxy } from "lib/plugins/proxy";
@@ -17,10 +16,22 @@ export const app = new Elysia()
       target: env.LOGGER_TARGET,
     }),
   )
-  .use(helmet())
+  .use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          connectSrc: ["'self'"],
+          defaultSrc: ["'self'"],
+          fontSrc: ["'self'", "https:", "data:"],
+          imgSrc: ["'self'", "data:", "https:"],
+          scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+          styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        },
+      },
+    }),
+  )
   .use(cors())
   .use(serverTiming())
-  .use(compression())
   .use(openapi())
   .use(serviceProxy(serviceProxyConfig.user))
   .use(serviceProxy(serviceProxyConfig.chat))
