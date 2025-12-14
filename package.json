@@ -20,6 +20,8 @@
       "packages/*"
     ],
     "catalog": {
+      "@bogeychan/elysia-logger": "^0.1.10",
+      "@elysiajs/openapi": "^1.4.11",
       "elysia": "latest"
     }
   },

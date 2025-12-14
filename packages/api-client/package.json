@@ -8,6 +8,6 @@
   },
   "devDependencies": {
     "config": "workspace:*",
-    "elysia": "catalog:service"
+    "elysia": "catalog:"
   }
 }

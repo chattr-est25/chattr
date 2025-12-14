@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "elysia": "catalog",
+    "@bogeychan/elysia-logger": "catalog:",
+    "@elysiajs/openapi": "catalog:",
+    "elysia": "catalog:",
     "api-client": "workspace:*"
   },
   "devDependencies": {
