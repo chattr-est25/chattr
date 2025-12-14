@@ -1,6 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "exclude": ["node_modules"],
   "extends": ["config/typescript/service.json"],
-  "include": ["src"],
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

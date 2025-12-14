@@ -1,13 +1,13 @@
 {
-  "name": "api-client",
-  "private": true,
-  "type": "module",
-  "version": "0.1.0",
   "dependencies": {
     "@elysiajs/eden": "^1.4.5"
   },
   "devDependencies": {
     "config": "workspace:*",
     "elysia": "catalog:"
-  }
+  },
+  "name": "api-client",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0"
 }

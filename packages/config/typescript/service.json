@@ -1,36 +1,36 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "ESNext",
-    "moduleDetection": "force",
-    "jsx": "react-jsx",
-    "allowJs": true,
-
-    "module": "Preserve",
-    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
+    "allowJs": true,
+    "alwaysStrict": true,
 
     "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
 
-    "strict": true,
-    "skipLibCheck": true,
-    "noImplicitAny": true,
+    "module": "Preserve",
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedIndexedAccess": true,
+    "noImplicitAny": true,
     "noImplicitOverride": true,
+    "noImplicitThis": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": false,
-    "noPropertyAccessFromIndexSignature": false,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
+    "skipLibCheck": true,
+
+    "strict": true,
     "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "noImplicitThis": true,
+    "target": "ESNext",
     "useUnknownInCatchVariables": false,
-    "alwaysStrict": true,
-    "exactOptionalPropertyTypes": true
+    "verbatimModuleSyntax": true
   }
 }

@@ -1,13 +1,15 @@
-import { logger } from "@bogeychan/elysia-logger";
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
+import { logger } from "lib/plugins/logger";
+import { env } from "@/lib/env";
 
 const PROXY_TARGET = "http://localhost:3001";
 
 export const app = new Elysia({ prefix: "/api" })
   .use(
     logger({
-      level: "debug",
+      level: env.LOGGER_LEVEL,
+      target: env.LOGGER_TARGET,
     }),
   )
   .use(openapi())
@@ -23,9 +25,9 @@ export const app = new Elysia({ prefix: "/api" })
     // Recreate the request to the target server
     // Note: Carefully manage headers (e.g., Host, X-Real-IP) as needed
     const proxyRequest = new Request(targetUrl.href, {
-      method: request.method,
-      headers: request.headers,
       body: request.body,
+      headers: request.headers,
+      method: request.method,
     });
 
     // Fetch the response from the target and return it directly

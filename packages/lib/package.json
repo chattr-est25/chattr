@@ -1,0 +1,19 @@
+{
+  "dependencies": {
+    "@bogeychan/elysia-logger": "^0.1.10",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "config": "workspace:*"
+  },
+  "exports": {
+    "./plugins/*": "./src/plugins/*.ts"
+  },
+  "name": "lib",
+  "peerDependencies": {
+    "elysia": "catalog:"
+  },
+  "private": true,
+  "type": "module",
+  "version": "0.1.0"
+}

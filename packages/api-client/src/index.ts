@@ -4,8 +4,8 @@ import { userClient } from "./user";
 
 export const apiClient = (url: string) => {
   return {
-    user: userClient(url),
     chat: chatClient(url),
     gateway: gatewayClient(url),
+    user: userClient(url),
   };
 };

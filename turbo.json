@@ -1,13 +1,13 @@
 {
   "$schema": "./node_modules/turbo/schema.json",
   "tasks": {
-    "transit": { "dependsOn": ["^transit"] },
-    "dev": { "persistent": true, "cache": false, "interactive": true },
-    "build": { "dependsOn": ["^build"], "outputs": ["server"] },
-    "typecheck": { "dependsOn": ["transit"] },
     "//#check": {},
     "//#check:unsafe": {},
-    "//#check:write": {}
+    "//#check:write": {},
+    "build": { "dependsOn": ["^build"], "outputs": ["server"] },
+    "dev": { "cache": false, "interactive": true, "persistent": true },
+    "transit": { "dependsOn": ["^transit"] },
+    "typecheck": { "dependsOn": ["transit"] }
   },
   "ui": "tui"
 }
