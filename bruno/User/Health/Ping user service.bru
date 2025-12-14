@@ -1,0 +1,16 @@
+meta {
+  name: Ping user service
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/user/ping
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

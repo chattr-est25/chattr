@@ -1,4 +1,10 @@
 import { treaty } from "@elysiajs/eden";
-import type { App } from "@service/gateway/server";
+import type { App } from "../../../services/gateway/src/server";
 
-export const gatewayClient = (url: string) => treaty<App>(`${url}/api`);
+/**
+ * Create a treaty client for the Gateway service.
+ *
+ * @param url - Base service URL.
+ * @returns Treaty client for the gateway service.
+ */
+export const gatewayClient = (url: string) => treaty<App>(`${url}`);
