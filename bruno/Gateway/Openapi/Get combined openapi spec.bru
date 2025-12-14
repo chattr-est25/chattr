@@ -1,0 +1,16 @@
+meta {
+  name: Get combined openapi spec
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/openapi/json/all
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

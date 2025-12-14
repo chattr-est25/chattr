@@ -1,13 +1,21 @@
 {
-  "name": "api-client",
-  "private": true,
-  "type": "module",
-  "version": "0.1.0",
   "dependencies": {
-    "@elysiajs/eden": "^1.4.5"
+    "@elysiajs/eden": "catalog:"
   },
   "devDependencies": {
     "config": "workspace:*",
     "elysia": "catalog:"
-  }
+  },
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    }
+  },
+  "name": "api-client",
+  "private": true,
+  "scripts": {
+    "build": "tsc && tsc-alias"
+  },
+  "type": "module",
+  "version": "0.1.0"
 }
