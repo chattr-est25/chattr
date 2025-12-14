@@ -2,12 +2,16 @@
   "dependencies": {
     "@elysiajs/cors": "^1.4.0",
     "@elysiajs/openapi": "catalog:",
+    "@elysiajs/server-timing": "^1.4.0",
     "@t3-oss/env-core": "catalog:",
+    "api-client": "workspace:*",
     "elysia": "catalog:",
     "lib": "workspace:*",
+    "openapi-merge": "^1.3.3",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@elysiajs/eden": "catalog:",
     "config": "workspace:*"
   },
   "module": "src/index.ts",

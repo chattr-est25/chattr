@@ -1,13 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    "paths": {
-      "@service/chat/*": ["../../services/chat/src/*"],
-      "@service/gateway/*": ["../../services/gateway/src/*"],
-      "@service/user/*": ["../../services/user/src/*"]
-    }
-  },
   "exclude": ["node_modules"],
   "extends": ["config/typescript/service.json"],
-  "include": ["src"]
+  "include": ["src", "**/services/**.d.ts"],
+  "tsc-alias": {
+    "resolveFullPaths": true
+  }
 }

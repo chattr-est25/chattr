@@ -12,8 +12,7 @@ export const serviceProxyConfig: Record<Services, ServiceProxyOptions> = {
   chat: {
     name: "chat",
     pathRewrite: {
-      prependPrefix: "/api",
-      stripPrefix: "/api/chat",
+      stripPrefix: "/chat",
     },
     route: "/chat/*",
     target: env.CHAT_SERVICE_URL,
@@ -22,8 +21,7 @@ export const serviceProxyConfig: Record<Services, ServiceProxyOptions> = {
   user: {
     name: "user",
     pathRewrite: {
-      prependPrefix: "/api",
-      stripPrefix: "/api/user",
+      stripPrefix: "/user",
     },
     route: "/user/*",
     target: env.USER_SERVICE_URL,

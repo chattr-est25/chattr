@@ -1,12 +1,14 @@
 import cors from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
+import serverTiming from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
 import { loggerPlugin } from "lib/plugins/logger";
 import { serviceProxy } from "lib/plugins/proxy";
 import { env } from "@/lib/env";
+import { openApiMergeHandler } from "./lib/openapi-merge";
 import { serviceProxyConfig } from "./lib/service-config";
 
-export const app = new Elysia({ prefix: "/api" })
+export const app = new Elysia()
   .use(
     loggerPlugin({
       level: env.LOGGER_LEVEL,
@@ -14,9 +16,22 @@ export const app = new Elysia({ prefix: "/api" })
     }),
   )
   .use(cors())
-  .use(openapi())
+  .use(serverTiming())
+  .use(
+    openapi({
+      documentation: {
+        info: {
+          title: "Chattr gateway service",
+          version: "1.0.0",
+        },
+      },
+      path: "openapi",
+      scalar: { url: "/openapi/json" },
+    }),
+  )
   .use(serviceProxy(serviceProxyConfig.user))
   .use(serviceProxy(serviceProxyConfig.chat))
+  .get("/openapi/json", openApiMergeHandler)
   .listen(3000);
 
 export type App = typeof app;

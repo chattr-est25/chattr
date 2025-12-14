@@ -9,7 +9,9 @@ export const env = createEnv({
   server: {
     /* Service */
     SERVICE_NAME: z.string().default("chat"),
-    APP_ENV: z.enum(["local", "staging", "production"]).default("local"),
+    NODE_ENV: z
+      .enum(["development", "staging", "production"])
+      .default("development"),
     HOST: z.string().default("localhost"),
     PORT: z.coerce.number().min(3000).max(9999),
 
@@ -20,6 +22,7 @@ export const env = createEnv({
     LOGGER_TARGET: z.enum(["pino/file", "pino-pretty"]).default("pino-pretty"),
 
     /* Gateway */
+    GATEWAY_SERVICE_URL: z.url(),
     USER_SERVICE_URL: z.url(),
     CHAT_SERVICE_URL: z.url(),
   },
