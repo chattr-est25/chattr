@@ -17,7 +17,6 @@ export const plugins = new Elysia()
     }),
   )
   .use(helmet(helmetOptions))
-  .use(rateLimit())
   .use(cors())
   .use(serverTiming())
   .use(
