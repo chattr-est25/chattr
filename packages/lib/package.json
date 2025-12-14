@@ -5,6 +5,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@elysiajs/openapi": "catalog:",
     "config": "workspace:*"
   },
   "exports": {

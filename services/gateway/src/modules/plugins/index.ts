@@ -9,7 +9,7 @@ import { loggerPlugin } from "lib/plugins/logger";
 import { env } from "@/lib/env";
 import { helmetOptions } from "./constant";
 
-export const plugsins = new Elysia()
+export const plugins = new Elysia()
   .use(
     loggerPlugin({
       level: env.LOGGER_LEVEL,

@@ -1,8 +1,18 @@
+import type { ElysiaOpenAPIConfig } from "@elysiajs/openapi";
+
 export const openApiPluginOptions = (options: {
   enabled?: boolean;
   url?: string;
-}) => ({
-  enabled: options.enabled ?? true,
+}): ElysiaOpenAPIConfig => ({
+  documentation: {
+    info: {
+      description: "OpenAPI Docs for Chattr Microservices",
+      title: "Chattr Microservices",
+      version: "1.0.0",
+    },
+    openapi: "3.0.3",
+  },
+  enabled: options.enabled || true,
   scalar: {
     darkMode: true,
     favicon: "https://elysiajs.com/assets/elysia.svg",

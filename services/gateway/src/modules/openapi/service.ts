@@ -1,4 +1,5 @@
 import { isErrorResult, merge } from "openapi-merge";
+import { api } from "@/lib/client";
 import { log } from "@/lib/logger";
 import { serviceProxyConfig } from "@/modules/proxy/constant";
 import { tagGroups } from "./constant";

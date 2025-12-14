@@ -1,11 +1,11 @@
 import { Elysia } from "elysia";
 import { health } from "@/modules/health";
 import { openapiSpec } from "./modules/openapi";
-import { plugsins } from "./modules/plugins";
+import { plugins } from "./modules/plugins";
 import { proxy } from "./modules/proxy";
 
 export const app = new Elysia()
-  .use(plugsins)
+  .use(plugins)
   .use(openapiSpec)
   .use(health)
   .use(proxy)
