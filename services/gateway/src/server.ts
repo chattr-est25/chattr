@@ -2,6 +2,7 @@ import cors from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
 import serverTiming from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
+import { helmet } from "elysia-helmet";
 import { loggerPlugin } from "lib/plugins/logger";
 import { serviceProxy } from "lib/plugins/proxy";
 import { env } from "@/lib/env";
@@ -15,20 +16,10 @@ export const app = new Elysia()
       target: env.LOGGER_TARGET,
     }),
   )
+  .use(helmet())
   .use(cors())
   .use(serverTiming())
-  .use(
-    openapi({
-      documentation: {
-        info: {
-          title: "Chattr gateway service",
-          version: "1.0.0",
-        },
-      },
-      path: "openapi",
-      scalar: { url: "/openapi/json" },
-    }),
-  )
+  .use(openapi())
   .use(serviceProxy(serviceProxyConfig.user))
   .use(serviceProxy(serviceProxyConfig.chat))
   .get("/openapi/json", openApiMergeHandler)
