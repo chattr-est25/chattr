@@ -1,3 +1,4 @@
+import cors from "@elysiajs/cors";
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { loggerPlugin } from "lib/plugins/logger";
@@ -12,6 +13,7 @@ export const app = new Elysia({ prefix: "/api" })
       target: env.LOGGER_TARGET,
     }),
   )
+  .use(cors())
   .use(openapi())
   .use(serviceProxy(serviceProxyConfig.user))
   .use(serviceProxy(serviceProxyConfig.chat))

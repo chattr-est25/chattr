@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@elysiajs/cors": "^1.4.0",
     "@elysiajs/openapi": "catalog:",
     "@t3-oss/env-core": "catalog:",
     "elysia": "catalog:",
