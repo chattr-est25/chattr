@@ -1,9 +1,9 @@
 import { isErrorResult, merge } from "openapi-merge";
-import { api } from "./client";
-import { log } from "./logger";
-import { serviceProxyConfig } from "./service-config";
+import { log } from "@/lib/logger";
+import { serviceProxyConfig } from "@/modules/proxy/constant";
+import { tagGroups } from "./constant";
 
-export const openApiMergeHandler = async () => {
+export const mergeOpenApiSpecs = async () => {
   const baseSpec = {
     oas: {
       info: {
@@ -13,6 +13,7 @@ export const openApiMergeHandler = async () => {
       },
       openapi: "3.0.3",
       paths: {},
+      "x-tagGroups": tagGroups,
     },
   };
 

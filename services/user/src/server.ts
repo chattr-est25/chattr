@@ -1,6 +1,6 @@
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
-
+import { openApiPluginOptions } from "lib/constants/openapi";
 import { loggerPlugin } from "lib/plugins/logger";
 import { env } from "@/lib/env";
 
@@ -12,18 +12,20 @@ export const app = new Elysia()
     }),
   )
   .use(
-    openapi({
-      documentation: {
-        info: {
-          title: "Chattr user service",
-          version: "1.0.0",
-        },
-      },
-    }),
+    openapi(
+      openApiPluginOptions({
+        enabled: env.NODE_ENV !== "production",
+      }),
+    ),
   )
-  .get("/ping", {
-    message: "Welcome to User service!",
-  })
+  .get(
+    "/ping",
+    {
+      status: "ok",
+    },
+    { detail: { summary: "ping user service", tags: ["user/health"] } },
+  )
+
   .listen(3001);
 
 export type App = typeof app;

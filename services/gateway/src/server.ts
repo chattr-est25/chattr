@@ -1,47 +1,14 @@
-import cors from "@elysiajs/cors";
-import openapi from "@elysiajs/openapi";
-import serverTiming from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
-import { helmet } from "elysia-helmet";
-import { loggerPlugin } from "lib/plugins/logger";
-import { serviceProxy } from "lib/plugins/proxy";
-import { env } from "@/lib/env";
-import { openApiMergeHandler } from "./lib/openapi-merge";
-import { serviceProxyConfig } from "./lib/service-config";
+import { health } from "@/modules/health";
+import { openapiSpec } from "./modules/openapi";
+import { plugsins } from "./modules/plugins";
+import { proxy } from "./modules/proxy";
 
 export const app = new Elysia()
-  .use(
-    loggerPlugin({
-      level: env.LOGGER_LEVEL,
-      target: env.LOGGER_TARGET,
-    }),
-  )
-  .use(
-    helmet({
-      contentSecurityPolicy: {
-        directives: {
-          connectSrc: ["'self'"],
-          defaultSrc: ["'self'"],
-          fontSrc: ["'self'", "https:", "data:"],
-          imgSrc: ["'self'", "data:", "https:"],
-          scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
-          styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-        },
-      },
-    }),
-  )
-  .use(cors())
-  .use(serverTiming())
-  .use(
-    openapi({
-      scalar: {
-        url: "/openapi/json/all",
-      },
-    }),
-  )
-  .use(serviceProxy(serviceProxyConfig.user))
-  .use(serviceProxy(serviceProxyConfig.chat))
-  .get("/openapi/json/all", openApiMergeHandler, { detail: { hide: true } })
+  .use(plugsins)
+  .use(openapiSpec)
+  .use(health)
+  .use(proxy)
   .listen(3000);
 
 export type App = typeof app;

@@ -1,5 +1,5 @@
 import type { ServiceProxyOptions } from "lib/plugins/proxy";
-import { env } from "./env";
+import { env } from "@/lib/env";
 
 export const Services = {
   chat: "chat",
