@@ -3,7 +3,6 @@ import openapi from "@elysiajs/openapi";
 import serverTiming from "@elysiajs/server-timing";
 import { Elysia } from "elysia";
 import { helmet } from "elysia-helmet";
-import { rateLimit } from "elysia-rate-limit";
 import { openApiPluginOptions } from "lib/constants/openapi";
 import { loggerPlugin } from "lib/plugins/logger";
 import { env } from "@/lib/env";
