@@ -33,7 +33,7 @@ const createLoggerOptions = (options: CreateLoggerOptions) => ({
 export const logger = (
   options: CreateLoggerOptions = {
     level: "info",
-    target: Bun.env.APP_ENV === "local" ? "pino-pretty" : "pino/file",
+    target: (Bun.env.LOGGER_TARGET as any) ?? "pino/file",
   },
 ) => createPinoLogger(createLoggerOptions(options));
 

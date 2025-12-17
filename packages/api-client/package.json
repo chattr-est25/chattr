@@ -13,9 +13,7 @@
   },
   "name": "api-client",
   "private": true,
-  "scripts": {
-    "build": "tsc && tsc-alias"
-  },
+  "scripts": {},
   "type": "module",
   "version": "0.1.0"
 }
