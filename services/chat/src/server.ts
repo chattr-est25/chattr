@@ -1,9 +1,9 @@
 import { Elysia } from "elysia";
 import { env } from "./lib/env";
-import { health } from "./modules/health";
 import { plugins } from "./modules/plugins";
+import { routes } from "./modules/route";
 
-export const app = new Elysia().use(plugins).use(health).listen(env.PORT);
+export const app = new Elysia().use(plugins).use(routes).listen(env.PORT);
 
 export type App = typeof app;
 

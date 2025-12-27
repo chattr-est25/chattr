@@ -11,6 +11,6 @@ export const tagGroups: Array<{ name: string; tags: string[] }> = [
   },
   {
     name: "Chat Service",
-    tags: ["chat/health"],
+    tags: ["chat/health", "chat/message"],
   },
 ] as const;
