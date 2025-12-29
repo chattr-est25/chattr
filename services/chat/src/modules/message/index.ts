@@ -1,7 +1,12 @@
 import Elysia from "elysia";
 import { ErrorValidation } from "@/lib/error";
 import { deliveryLogBody, messageBody } from "./model";
-import { createMessage, findMember, getMessageById } from "./service";
+import {
+  createMessage,
+  deliveryLog,
+  findMember,
+  getMessageById,
+} from "./service";
 
 const tags = ["chat/message"];
 
@@ -52,20 +57,21 @@ export const messageRoutes = new Elysia({ prefix: "/message" })
     },
   )
   .post(
-    "/:id/delivery",
-    async ({ params, body, set }) => {
+    "/delivery-log",
+    async ({ body, set }) => {
       try {
         const payload = {
-          deliveryStatus: body.deliveryStatus,
-          messageId: params.id,
+          attempts: body.attempts,
+          deliveryStatus: body.deliveryStatus, // from payload
+          messageId: body.messageId,
           recipientId: body.recipientId,
         };
         console.log("Received message payload:", payload);
-        // const savedMessage = await createMessage(body);
+        const savedLogs = await deliveryLog(payload);
         set.status = 201;
         return {
           data: payload,
-          status: `Message ${(body.deliveryStatus).toLowerCase()} successfully.`,
+          status: `Log ${(body.deliveryStatus).toLowerCase()} successfully.`,
         };
       } catch (error) {
         if (error instanceof ErrorValidation) {
@@ -80,44 +86,8 @@ export const messageRoutes = new Elysia({ prefix: "/message" })
     {
       body: deliveryLogBody,
       detail: {
-        summary: "Send a new message",
+        summary: "Send a new log",
         tags,
       },
     },
   );
-// .post(
-//   "/delivery-log",
-//   async ({ body, set }) => {
-//     try {
-//       const payload = {
-//         attempts: body.attempts,
-//         deliveryStatus: body.deliveryStatus, // from payload
-//         lastAttempt: body.lastAttempt,
-//         messageId: body.messageId,
-//         recipientId: body.recipientId,
-//       };
-//       console.log("Received message payload:", payload);
-//       const savedMessage = await logMes
-//       set.status = 201;
-//       return {
-//         data: payload,
-//         status: `Message ${(body.deliveryStatus).toLowerCase()} successfully.`,
-//       };
-//     } catch (error) {
-//       if (error instanceof ErrorValidation) {
-//         set.status = error.status;
-//         return { message: error.message, status: "error" };
-//       }
-//       console.error("Unexpected error:", error);
-//       set.status = 500;
-//       return { message: "An unexpected error occurred.", status: "error" };
-//     }
-//   },
-//   {
-//     body: deliveryLogBody,
-//     detail: {
-//       summary: "Send a new message",
-//       tags,
-//     },
-//   },
-// );

@@ -64,3 +64,7 @@ export const createMessage = async (payload: MessageBody) => {
     throw new ErrorValidation("Internal server error", 500);
   }
 };
+
+export const deliveryLog = async (payload: DeliveryLogBody) => {
+  return await db.insert(deliveryLogs).values(payload);
+};
