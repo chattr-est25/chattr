@@ -1,14 +1,30 @@
 import Elysia from "elysia";
 import { ErrorValidation } from "@/lib/error";
-import { messageBody } from "./model";
-import { createMessage } from "./service";
+import { deliveryLogBody, messageBody } from "./model";
+import { createMessage, findMember, getMessageById } from "./service";
 
 const tags = ["chat/message"];
 
 export const messageRoutes = new Elysia({ prefix: "/message" })
-  .get("/", () => ({ status: "List of messages" }), {
-    detail: { summary: "List chat message", tags },
-  })
+  .get(
+    "/:id",
+    ({ params }) => {
+      return getMessageById(params.id);
+    },
+    {
+      detail: { summary: "get chat message", tags },
+    },
+  )
+  .get(
+    "/user/:userid",
+    ({ params }) => {
+      const user = findMember(params.userid);
+      return user;
+    },
+    {
+      detail: { summary: "get user", tags },
+    },
+  )
   .post(
     "/",
     async ({ body, set }) => {
@@ -34,4 +50,74 @@ export const messageRoutes = new Elysia({ prefix: "/message" })
         tags,
       },
     },
+  )
+  .post(
+    "/:id/delivery",
+    async ({ params, body, set }) => {
+      try {
+        const payload = {
+          deliveryStatus: body.deliveryStatus,
+          messageId: params.id,
+          recipientId: body.recipientId,
+        };
+        console.log("Received message payload:", payload);
+        // const savedMessage = await createMessage(body);
+        set.status = 201;
+        return {
+          data: payload,
+          status: `Message ${(body.deliveryStatus).toLowerCase()} successfully.`,
+        };
+      } catch (error) {
+        if (error instanceof ErrorValidation) {
+          set.status = error.status;
+          return { message: error.message, status: "error" };
+        }
+        console.error("Unexpected error:", error);
+        set.status = 500;
+        return { message: "An unexpected error occurred.", status: "error" };
+      }
+    },
+    {
+      body: deliveryLogBody,
+      detail: {
+        summary: "Send a new message",
+        tags,
+      },
+    },
   );
+// .post(
+//   "/delivery-log",
+//   async ({ body, set }) => {
+//     try {
+//       const payload = {
+//         attempts: body.attempts,
+//         deliveryStatus: body.deliveryStatus, // from payload
+//         lastAttempt: body.lastAttempt,
+//         messageId: body.messageId,
+//         recipientId: body.recipientId,
+//       };
+//       console.log("Received message payload:", payload);
+//       const savedMessage = await logMes
+//       set.status = 201;
+//       return {
+//         data: payload,
+//         status: `Message ${(body.deliveryStatus).toLowerCase()} successfully.`,
+//       };
+//     } catch (error) {
+//       if (error instanceof ErrorValidation) {
+//         set.status = error.status;
+//         return { message: error.message, status: "error" };
+//       }
+//       console.error("Unexpected error:", error);
+//       set.status = 500;
+//       return { message: "An unexpected error occurred.", status: "error" };
+//     }
+//   },
+//   {
+//     body: deliveryLogBody,
+//     detail: {
+//       summary: "Send a new message",
+//       tags,
+//     },
+//   },
+// );
