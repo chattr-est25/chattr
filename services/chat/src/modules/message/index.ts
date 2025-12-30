@@ -1,11 +1,12 @@
 import Elysia from "elysia";
 import { ErrorValidation } from "@/lib/error";
-import { deliveryLogBody, messageBody } from "./model";
+import { deliveryLogBody, messageBody, patchMessagebody } from "./model";
 import {
   createMessage,
   deliveryLog,
   findMember,
   getMessageById,
+  updateMessageById,
 } from "./service";
 
 const tags = ["chat/message"];
@@ -17,6 +18,16 @@ export const messageRoutes = new Elysia({ prefix: "/message" })
       return getMessageById(params.id);
     },
     {
+      detail: { summary: "get chat message", tags },
+    },
+  )
+  .patch(
+    "/:id",
+    ({ params, body }) => {
+      return updateMessageById(params.id, body);
+    },
+    {
+      body: patchMessagebody,
       detail: { summary: "get chat message", tags },
     },
   )

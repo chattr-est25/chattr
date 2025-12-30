@@ -65,7 +65,6 @@ async function handleAuthenticate(ws: any, data: messageType) {
       `${env.GATEWAY_SERVICE_URL}/chat/message/user/${data.userid}`,
       { method: "GET" },
     );
-    console.log("response", response);
     if (!response.ok) {
       ws.send(
         JSON.stringify({
@@ -104,10 +103,22 @@ async function handleAuthenticate(ws: any, data: messageType) {
 
 async function handleDeliveryConfirmation(ws: any, data: any) {
   try {
-    const message = await getMessageById(data.id);
+    const response = await getMessageById(data.id);
 
+    if (!response.ok) {
+      ws.send(
+        JSON.stringify({
+          error: "no message found",
+          messageId: data.id,
+          timestamp: Date.now(),
+          type: "status",
+        }),
+      );
+      return;
+    }
+    const message = await response.json();
     if (message) {
-      const senderWs = activeConnections.get(message.sender_id);
+      const senderWs = activeConnections.get(message.senderId);
       senderWs?.forEach((sws) => {
         sws.send(
           JSON.stringify({
@@ -162,6 +173,7 @@ async function handleRetryMessage(ws: any, data: any) {
     );
     await logDeliveryAttempt(message.id, ws.data.user_id, "sent");
   } catch (senderError) {
+    console.error(senderError);
     // failed to send a confirmation to sender
     await logDeliveryAttempt(
       message.id,
@@ -254,21 +266,20 @@ async function handleSendMessage(ws: any, data: any) {
     }
 
     savedMessage = await response.json();
-
+    const messageId = savedMessage.data[0].insertedId;
     // first send a message to sender
     try {
       ws.send(
         JSON.stringify({
-          messageId: savedMessage.id,
+          messageId: messageId,
           timestamp: Date.now(),
           type: "message_sent",
         }),
       );
-      await logDeliveryAttempt(savedMessage.id, ws.data.user_id, "sent");
     } catch (senderError) {
       // failed to send a confirmation to sender
       await logDeliveryAttempt(
-        savedMessage.id,
+        messageId,
         ws.data.user_id,
         "failed",
         "Failed to confirm to sender",
@@ -280,14 +291,10 @@ async function handleSendMessage(ws: any, data: any) {
 
     if (!recipientWs || recipientWs.size === 0) {
       // is offline ?
-      await updateMessageStatus(
-        savedMessage.id,
-        "pending",
-        "Recipient offline",
-      );
+      await updateMessageStatus(messageId, "pending", "Recipient offline");
       ws.send(
         JSON.stringify({
-          messageId: savedMessage.id,
+          messageId: messageId,
           reason: "recipient is offline, will be delivered when it gets online",
           status: "pending",
           type: "delivery_status",
@@ -316,12 +323,12 @@ async function handleSendMessage(ws: any, data: any) {
       errors.push(errorMsg);
     }
 
-    const deliveryStatus = deliveredCount > 0 ? "sent" : "failed";
+    const deliveryStatus: status = deliveredCount > 0 ? "sent" : "failed";
     const errorDetails = errors.length ? errors.join(",") : "";
 
-    await updateMessageStatus(savedMessage.id, deliveryStatus, errorDetails);
+    await updateMessageStatus(messageId, deliveryStatus, errorDetails);
     await logDeliveryAttempt(
-      savedMessage.id,
+      messageId,
       data.receiver_id,
       deliveryStatus,
       errorDetails,
@@ -333,13 +340,14 @@ async function handleSendMessage(ws: any, data: any) {
     const errorMsg = error instanceof Error ? error.message : "Unknown Error";
 
     if (savedMessage) {
-      updateMessageStatus(savedMessage.id, "failed", errorMsg);
+      const messageId = savedMessage.data[0].insertedId;
+      updateMessageStatus(messageId, "failed", errorMsg);
     }
 
     ws.send(
       JSON.stringify({
         canRetry: !!savedMessage,
-        messageId: savedMessage?.id,
+        messageId: savedMessage?.data?.[0]?.insertedId,
         reason: "Failed to sent message.",
         status: "failed",
         type: "error",
@@ -358,9 +366,11 @@ async function updateMessageStatus(id: any, status: status, errorMsg?: string) {
           error: errorMsg,
         }),
         headers: { "Content-Type": "application/json" },
-        method: "POST",
+        method: "PATCH",
       },
     );
+    const mesages = await response.json();
+    console.log("mesages", mesages);
   } catch (e) {
     console.log("e", e);
   }
@@ -422,3 +432,4 @@ async function getMessageById(id: string): Promise<any> {
 //     "receiver_id": "54d8374c-8ec3-467b-8097-ee6bacdfb355",
 //     "content": "Hello!"
 //   }
+// brave setup

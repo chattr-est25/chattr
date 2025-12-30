@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { deliveryLogs, messages, users } from "@/db/schema";
 import { ErrorValidation } from "@/lib/error";
-import type { DeliveryLogBody, MessageBody } from "./model";
+import type { DeliveryLogBody, MessageBody, PatchMessageBody } from "./model";
 
 export const findMember = async (user_id: string) => {
   return await db.query.users.findFirst({
@@ -12,8 +12,18 @@ export const findMember = async (user_id: string) => {
 
 export const getMessageById = async (id: string) => {
   return await db.query.messages.findFirst({
-    where: and(eq(messages.id, id), eq(users.status, "active")),
+    where: and(eq(messages.id, id), eq(messages.status, "active")),
   });
+};
+
+export const updateMessageById = async (id: string, body: PatchMessageBody) => {
+  return await db
+    .update(messages)
+    .set({
+      deliveryStatus: body.deliveryStatus,
+      error: body?.error,
+    })
+    .where(and(eq(messages.id, id), eq(messages.status, "active")));
 };
 
 export const createMessage = async (payload: MessageBody) => {
