@@ -138,7 +138,9 @@ async function handleDeliveryConfirmation(ws: any, data: any) {
 async function handleRetryMessage(ws: any, data: any) {
   const startTime = Date.now();
 
-  const message = await getMessageById(data.id);
+  const response = await getMessageById(data.id);
+  const message = await response.json();
+
   if (!message) {
     ws.send(
       JSON.stringify({
@@ -171,7 +173,6 @@ async function handleRetryMessage(ws: any, data: any) {
         type: "message_sent",
       }),
     );
-    await logDeliveryAttempt(message.id, ws.data.user_id, "sent");
   } catch (senderError) {
     console.error(senderError);
     // failed to send a confirmation to sender
@@ -184,7 +185,7 @@ async function handleRetryMessage(ws: any, data: any) {
   }
 
   // now try to deliver it to recipient
-  const recipientWs = activeConnections.get(data.receiver_id);
+  const recipientWs = activeConnections.get(message.recipientId);
 
   if (!recipientWs || recipientWs.size === 0) {
     // is offline ?
@@ -226,7 +227,7 @@ async function handleRetryMessage(ws: any, data: any) {
   await updateMessageStatus(message.id, deliveryStatus, errorDetails);
   await logDeliveryAttempt(
     message.id,
-    data.receiver_id,
+    message.recipientId,
     deliveryStatus,
     errorDetails,
   );
@@ -260,12 +261,12 @@ async function handleSendMessage(ws: any, data: any) {
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
-
     if (!response.ok) {
       throw new Error("Failed to save message");
     }
 
     savedMessage = await response.json();
+
     const messageId = savedMessage.data[0].insertedId;
     // first send a message to sender
     try {
@@ -371,6 +372,7 @@ async function updateMessageStatus(id: any, status: status, errorMsg?: string) {
     );
     const mesages = await response.json();
     console.log("mesages", mesages);
+    return mesages;
   } catch (e) {
     console.log("e", e);
   }
