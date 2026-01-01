@@ -3,19 +3,25 @@
     "@elysiajs/openapi": "catalog:",
     "@t3-oss/env-core": "catalog:",
     "api-client": "workspace:*",
+    "drizzle-orm": "catalog:",
     "elysia": "catalog:",
     "elysia-http-exception": "catalog:",
     "lib": "workspace:*",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "config": "workspace:*"
+    "config": "workspace:*",
+    "drizzle-kit": "catalog:"
   },
   "module": "src/index.ts",
   "name": "chat",
   "private": true,
   "scripts": {
     "build": "bun build src/index.ts --compile --minify-whitespace --minify-syntax --target bun --outfile server",
+    "db:generate": "bun run --bun drizzle-kit generate",
+    "db:migrate": "bun run --bun drizzle-kit migrate",
+    "db:push": "bun run --bun drizzle-kit push",
+    "db:studio": "bun run --bun drizzle-kit studio",
     "dev": "bun run --watch src/server.ts",
     "start": "./server",
     "typecheck": "tsc --noEmit"

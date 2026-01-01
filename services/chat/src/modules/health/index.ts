@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
 
-export const health = new Elysia().get(
+export const healthRoutes = new Elysia().get(
   "/ping",
   {
     status: "ok",
