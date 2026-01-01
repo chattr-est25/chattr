@@ -61,7 +61,7 @@ A modern, scalable microservices architecture built with **Bun**, **Elysia**, an
 chattr/
 ├── services/                 # Microservices
 │   ├── gateway/             # API Gateway - Routes & orchestrates requests
-│   ├── chat/                # Chat Service - Real-time messaging
+│   ├── chat/                # Chat Service - Real-time messaging and api integration
 │   └── user/                # User Service - User management & authentication
 │
 ├── packages/                # Shared packages & utilities
