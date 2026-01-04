@@ -23,6 +23,7 @@ export interface CreateLoggerOptions {
 }
 
 const createLoggerOptions = (options: CreateLoggerOptions) => ({
+  autoLogging: false,
   level: options.level,
   transport: {
     options: { colorize: true, translateTime: true },

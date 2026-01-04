@@ -3,9 +3,11 @@ import { health } from "@/modules/health";
 import { env } from "./lib/env";
 import { openapiSpec } from "./modules/openapi";
 import { plugins } from "./modules/plugins";
+import { socket } from "./modules/plugins/socket";
 import { proxy } from "./modules/proxy";
 
 export const app = new Elysia()
+  .use(socket)
   .use(plugins)
   .use(openapiSpec)
   .use(health)
