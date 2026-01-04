@@ -1,6 +1,16 @@
 import Elysia from "elysia";
 import type { ElysiaWS } from "elysia/ws";
 import { env } from "@/lib/env";
+import {
+  isUserOnline,
+  REDIS_KEYS,
+  redisPub,
+  redisSub,
+  setUserOffline,
+  setUserOnline,
+  setUserStartTyping,
+  setUserStopTyping,
+} from "@/lib/redis";
 
 interface messageType {
   content: string;
@@ -22,14 +32,43 @@ interface DeliveryLog {
 const activeConnections = new Map<string, Set<ElysiaWS>>();
 const deliveryLogs = new Map<string, DeliveryLog>();
 
+redisSub.subscribe(
+  [REDIS_KEYS.PRESENCE_CHANNEL, REDIS_KEYS.TYPING_CHANNEL],
+  async (message, channel) => {
+    const data = JSON.parse(message);
+    if (channel === REDIS_KEYS.PRESENCE_CHANNEL) {
+      await handlePresenceUpdate(data);
+    }
+    if (channel === REDIS_KEYS.TYPING_CHANNEL) {
+      await handleTypingUpdate(data);
+    }
+  },
+);
+
 export const socket = new Elysia().ws("/ws", {
-  close(ws: any) {
-    if (ws.data.user_id) {
-      const useConnections = activeConnections.get(ws.data.user_id);
+  async close(ws: any) {
+    const userid = ws.data.user_id;
+
+    if (userid) {
+      const useConnections = activeConnections.get(userid);
       useConnections?.delete(ws);
       if (useConnections?.size === 0) {
-        useConnections.delete(ws.data.user_id);
+        useConnections.delete(userid);
       }
+      setUserOffline(userid, ws.id);
+      const stillOnline = await isUserOnline(userid);
+      if (!stillOnline) {
+        // Publish offline status
+        await redisPub.publish(
+          REDIS_KEYS.PRESENCE_CHANNEL,
+          JSON.stringify({
+            lastSeen: Date.now(),
+            status: "offline",
+            userid,
+          }),
+        );
+      }
+      console.log(`User ${userid} disconnected (${ws.id})`);
     }
   },
   message(ws, message) {
@@ -38,6 +77,12 @@ export const socket = new Elysia().ws("/ws", {
       switch (data.type) {
         case "authenticate":
           handleAuthenticate(ws, data);
+          break;
+        case "start_typing":
+          setUserStartTyping(data);
+          break;
+        case "stop_typing":
+          setUserStopTyping(data);
           break;
         case "send_message":
           handleSendMessage(ws, data);
@@ -49,7 +94,6 @@ export const socket = new Elysia().ws("/ws", {
           handleRetryMessage(ws, data);
           break;
       }
-      // ws.send(message);
     } catch (e) {
       console.log("e", e);
     }
@@ -58,6 +102,39 @@ export const socket = new Elysia().ws("/ws", {
     console.log("Client connected:", ws.id);
   },
 });
+
+async function handlePresenceUpdate(data: any) {
+  const { status, userId } = data;
+  const userConnections = activeConnections.get(userId);
+  if (userConnections) {
+    userConnections.forEach((ws) => {
+      ws.send(
+        JSON.stringify({
+          status,
+          timestamp: Date.now(),
+          type: "presence_update",
+          userId,
+        }),
+      );
+    });
+  }
+}
+
+async function handleTypingUpdate(data: any) {
+  const { receiver_id, user_id, typing } = data;
+  const userConnections = activeConnections.get(receiver_id);
+  if (userConnections) {
+    userConnections.forEach((ws) => {
+      ws.send(
+        JSON.stringify({
+          timestamp: Date.now(),
+          typing,
+          user_id,
+        }),
+      );
+    });
+  }
+}
 
 async function handleAuthenticate(ws: any, data: messageType) {
   try {
@@ -82,6 +159,17 @@ async function handleAuthenticate(ws: any, data: messageType) {
       activeConnections.set(userData.id, new Set());
     }
     activeConnections.get(userData.id)?.add(ws);
+
+    setUserOnline(userData.id, ws.id);
+
+    await redisPub.publish(
+      REDIS_KEYS.PRESENCE_CHANNEL,
+      JSON.stringify({
+        status: "online",
+        timestamp: Date.now(),
+        userId: userData.id,
+      }),
+    );
 
     ws.send(
       JSON.stringify({
@@ -231,9 +319,6 @@ async function handleRetryMessage(ws: any, data: any) {
     deliveryStatus,
     errorDetails,
   );
-
-  const duration = Date.now() - startTime;
-  console.log("duration", duration);
 }
 
 async function handleSendMessage(ws: any, data: any) {
@@ -424,14 +509,3 @@ async function getMessageById(id: string): Promise<any> {
     console.log("e", e);
   }
 }
-
-// {
-//     "type" : "authenticate",
-//     "userid" : "287594c7-e6f1-4a13-b2e3-43da2f4a1c27" //userid
-// }
-// {
-//     "type": "send_message",
-//     "receiver_id": "54d8374c-8ec3-467b-8097-ee6bacdfb355",
-//     "content": "Hello!"
-//   }
-// brave setup

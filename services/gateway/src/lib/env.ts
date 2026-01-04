@@ -25,5 +25,8 @@ export const env = createEnv({
     GATEWAY_SERVICE_URL: z.url(),
     USER_SERVICE_URL: z.url(),
     CHAT_SERVICE_URL: z.url(),
+
+    /* Redis */
+    REDIS_URL: z.url(),
   },
 });
